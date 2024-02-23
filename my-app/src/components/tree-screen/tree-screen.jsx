@@ -11,6 +11,8 @@ export default function TreeScreen() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
     setCtx(canvas.getContext('2d'))
+    ctx.fillStyle = '#000000'
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   }, [])
 
   return (
