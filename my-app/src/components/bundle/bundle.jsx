@@ -1,6 +1,15 @@
 import './bundle-style.css'
 
-export default function Bundle({ numOfNodes, setNumOfNodes, handleSubmit }) {
+export default function Bundle({
+  numOfNodes,
+  setNumOfNodes,
+  handleGenerateTree,
+  handleInsert,
+  handleDelete,
+  handleSearch,
+  algotype,
+  handleAlgoChange,
+}) {
   return (
     <div className='bundle-container'>
       <div className='header'>
@@ -10,7 +19,12 @@ export default function Bundle({ numOfNodes, setNumOfNodes, handleSubmit }) {
         <ul>
           <li>
             <label htmlFor='algo'>Algorithm</label>
-            <select id='algo' defaultValue='none'>
+            <select
+              value={algotype}
+              onChange={handleAlgoChange}
+              id='algo'
+              defaultValue='none'
+            >
               <option value='none'>Select tree</option>
               <option value='binary-search'>binary-search</option>
               <option value='heap'>heap</option>
@@ -28,7 +42,7 @@ export default function Bundle({ numOfNodes, setNumOfNodes, handleSubmit }) {
             ></input>
           </li>
           <li>
-            <button onClick={handleSubmit}>Generaet Tree</button>
+            <button onClick={handleGenerateTree}>Generaet Tree</button>
           </li>
           <li>
             <label htmlFor='number-to-insert'>Number to insert</label>
@@ -39,6 +53,9 @@ export default function Bundle({ numOfNodes, setNumOfNodes, handleSubmit }) {
             ></input>
           </li>
           <li>
+            <button onClick={handleInsert}>Inser Node</button>
+          </li>
+          <li>
             <label htmlFor='number-to-delete'>Number to delete</label>
             <input
               type='number'
@@ -47,12 +64,18 @@ export default function Bundle({ numOfNodes, setNumOfNodes, handleSubmit }) {
             ></input>
           </li>
           <li>
+            <button onClick={handleDelete}>Delete Node</button>
+          </li>
+          <li>
             <label htmlFor='number-to-search'>Number to search</label>
             <input
               type='number'
               id='number-to-search'
               placeholder='number to search'
             ></input>
+          </li>
+          <li>
+            <button onClick={handleSearch}>Search Node</button>
           </li>
         </ul>
       </div>
