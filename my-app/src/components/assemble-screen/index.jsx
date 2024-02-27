@@ -6,10 +6,14 @@ import GenerateTree from '../trees/generate-tree/generate-tree'
 import BinarySearchTree from '../trees/algorithms/bst'
 
 export const numNodeContext = createContext()
+export const generatedTreeCtx = createContext()
+export const shaffledArrCtx = createContext()
 
 export default function AssembleScreen() {
   const [numOfNodes, setNumOfNodes] = useState('3')
   const [selectedAlgo, setSelectedAlgo] = useState()
+  const [generatedTree, setGeneratedTree] = useState(null)
+  const [shaffledArr, setShaffledArr] = useState([])
 
   // handle algorithm slection function
   function handleAlgoChange(e) {
@@ -22,8 +26,11 @@ export default function AssembleScreen() {
   function handleGenerateTree() {
     if (selectedAlgo === 'binary-search') {
       const tempTree = new BinarySearchTree()
-      const tree = GenerateTree(tempTree, numOfNodes)
-      console.log('tree is', tempTree)
+      const { tree, arr } = GenerateTree(tempTree, numOfNodes)
+      setGeneratedTree(tree)
+      setShaffledArr(arr)
+      console.log('tree is', tree)
+      console.log('arr is ', arr)
     }
   }
 
@@ -43,16 +50,20 @@ export default function AssembleScreen() {
   return (
     <>
       <numNodeContext.Provider value={numOfNodes}>
-        <Bundle
-          numOfNodes={numOfNodes}
-          setNumOfNodes={setNumOfNodes}
-          handleGenerateTree={handleGenerateTree}
-          handleInsert={handleInsert}
-          handleDelete={handleDelete}
-          handleSearch={handleSearch}
-          handleAlgoChange={handleAlgoChange}
-        />
-        <Canvas />
+        <generatedTreeCtx.Provider value={generatedTree}>
+          <shaffledArrCtx.Provider value={shaffledArr}>
+            <Bundle
+              numOfNodes={numOfNodes}
+              setNumOfNodes={setNumOfNodes}
+              handleGenerateTree={handleGenerateTree}
+              handleInsert={handleInsert}
+              handleDelete={handleDelete}
+              handleSearch={handleSearch}
+              handleAlgoChange={handleAlgoChange}
+            />
+            <Canvas />
+          </shaffledArrCtx.Provider>
+        </generatedTreeCtx.Provider>
       </numNodeContext.Provider>
     </>
   )

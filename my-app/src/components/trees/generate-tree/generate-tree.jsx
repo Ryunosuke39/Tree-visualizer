@@ -31,5 +31,5 @@ export default function GenerateTree(tree, num) {
     console.log('ERROR: arr is empty')
     console.log('num is ', num)
   }
-  return tree
+  return { tree, arr }
 }
