@@ -23,7 +23,8 @@ function Node(x, y, radius, string, left, right) {
   }
 }
 
-// test
+// test: can not print nodes. not recursive
+// content of this function copied directly inside useEffect: working, currently commented out
 function drawTree(ctx, shaffledArray, tree) {
   let values = []
   for (let i = 0; i < shaffledArray; i++) {
@@ -58,6 +59,61 @@ function drawTree(ctx, shaffledArray, tree) {
   }
 }
 
+// need to get access to the root node, and root node need to be data-structure node, not canvas node
+// so that we can compare node weight with another child weight to structure tree.
+// current issue is the props function taking is canvas node so you can not access weight variable like node.weight
+// though we are passing weight value, we can solve this issue, then how can we set the first weight variable to be null
+// so function can keeps it root(weight) and compare it with newly passed node, the function need to have constructor
+// right now, there is not data structure in placeNodeRec so it won't save the info about first inserted node(root)
+function placeNodeRec(rootNode, x, y, weight, tree, shaffledArr, ctx) {
+  console.log('function called and node is', rootNode)
+  if (rootNode == null) {
+    // place root canvas node in abs pos
+    rootNode = new Node(x, y, 30, weight, null, null)
+    let value = tree.search(shaffledArr[0]).weight
+    let left = tree.search(shaffledArr[0]).left
+    let right = tree.search(shaffledArr[0]).right
+    let rootNode = new Node(x, y, 30, value, left, right)
+    console.log('from placeNodeRec: root node is', rootNode)
+    console.log(
+      'from placeNodeRec: rootNode weight is ',
+      JSON.stringify(rootNode.weight)
+    )
+    rootNode.draw(ctx)
+    return rootNode
+  }
+  if (weight < rootNode.weight) {
+    console.log('entered')
+    x = x - 100
+    y = y + 100
+    rootNode.left = placeNodeRec(
+      rootNode.left,
+      x,
+      y,
+      weight,
+      tree,
+      shaffledArr,
+      ctx
+    )
+  } else if (weight > rootNode.weight) {
+    console.log('entered')
+    x = x + 100
+    y = y + 100
+    rootNode.right = placeNodeRec(
+      rootNode.right,
+      x,
+      y,
+      weight,
+      tree,
+      shaffledArr,
+      ctx
+    )
+  }
+
+  return rootNode
+}
+
+// main animation function with canvas setup
 export default function Animation() {
   const canvasRef = useRef(null)
   const generatedTree = useContext(generatedTreeCtx)
@@ -71,76 +127,37 @@ export default function Animation() {
     c.canvas.height = window.innerHeight
     let animationFrameId
 
-    console.log('shaffled arr is ', shaffledArr)
-    const canvasNodes = []
+    // node1
+    // let node1V = generatedTree.search(shaffledArr[0]).weight
 
-    // Show Nodes from tree test: working
+    //Generate Tree
     if (shaffledArr && shaffledArr.length) {
-      // create canvas node object based on generated tree(bst) and shaffled array
+      let root = null
+      console.log('shaffled arr is', shaffledArr)
+
       for (let i = 0; i < shaffledArr.length; i++) {
-        // x, y, radius, etc ...
-        let tempNode = new Node(
-          c.canvas.width / 2,
-          100 * i + 100,
+        let value = generatedTree.search(shaffledArr[i]).weight
+        console.log('value is', value)
+        let left = generatedTree.search(shaffledArr[i]).left
+        let right = generatedTree.search(shaffledArr[i]).right
+        let x = c.canvas.width / 2
+        let y = 100
+        // function Node(x, y, radius, string, left, right)
+        root = new Node(
+          x,
+          y,
           30,
-          shaffledArr[i],
-          generatedTree.search(shaffledArr[i]).left,
-          generatedTree.search(shaffledArr[i]).right
+          generatedTree.search(shaffledArr[i]).weight,
+          left,
+          right
         )
-        canvasNodes.push(tempNode)
-      }
-      console.log('canvas nodes list is', canvasNodes)
-    }
-
-    // draw tree
-    // drawTree(c, shaffledArr, generatedTree)
-    let values = []
-    if (shaffledArr && shaffledArr.length) {
-      for (let i = 0; i < shaffledArr.length; i++) {
-        // position root node at absolute position
-        if (i == 0) {
-          let value = generatedTree.search(shaffledArr[i]).weight
-          console.log('root value is', value)
-          console.log('shaffledArr is', shaffledArr)
-          console.log('shaffledArry[1] is', shaffledArr[i])
-          values.push(value)
-          let left = generatedTree.search(shaffledArr[i]).left
-          let right = generatedTree.search(shaffledArr[i]).right
-          let rootNode = new Node(
-            c.canvas.width / 2,
-            100,
-            30,
-            JSON.stringify(value),
-            left,
-            right
-          )
-          rootNode.draw(c)
-        } else {
-          // child nodes
-          let x = c.canvas.width / 2
-          let y = 300
-          let value = generatedTree.search(shaffledArr[i]).weight
-          // change x, y position of node by comparing exisiting node
-          for (let j = 0; j < values.length; j++) {
-            // when value < values[i]
-            if (value > values[j]) {
-              x = x + 100
-              y = y - 100
-            } else {
-              // when value > values[i]
-              x = x - 100
-              y = y - 100
-            }
-          }
-          let childNode = new Node(
-            x,
-            y,
-            30,
-            JSON.stringify(value),
-            0,
-            Math.PI * 2
-          )
-          childNode.draw(c)
+        // this.placeNodeRec = function (rootNode, x, y, weight, tree, shaffledArr, ctx)
+        root = placeNodeRec(root, x, y, value, generatedTree, shaffledArr, c)
+        console.log('root node is', root)
+        if (root) {
+          console.log('root node is', root)
+          console.log(`node at ${i} idx is`, root)
+          // root.draw(c)
         }
       }
     }

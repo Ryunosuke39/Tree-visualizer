@@ -6,8 +6,8 @@ import TreeManipulation from './tree-manipulation'
 export default function Canvas() {
   return (
     <>
-      <Animation />
-      {/* <TreeManipulation /> */}
+      {/* <Animation /> */}
+      <TreeManipulation />
     </>
   )
 }
