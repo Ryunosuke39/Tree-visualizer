@@ -17,21 +17,18 @@ export default function RenderTree() {
     // circle
     ctx.beginPath()
     ctx.arc(this.x, this.y, 20, 0, Math.PI * 2)
+    // ctx.fillStyle = 'blue'
+    // ctx.fill()
     ctx.strokeStyle = 'blue'
     ctx.stroke()
 
-    // line
-    // ctx.moveTo(this.x, this.y)
-    // ctx.lineTo(100, 100)
-    // ctx.strokeStyle = 'blue'
-    // ctx.stroke()
-
     // text
-    ctx.font = '20px Arial'
-    ctx.fillText(this.num, this.x, this.y)
+    // ctx.fillStyle = 'white'
+    ctx.font = '18px Arial'
+    ctx.fillText(this.num, this.x - 5, this.y - 2)
   }
 
-  // get canvas node based on the weight its passed
+  // get canvas node from array based on the weight its passed
   function getCanvasNodeFromNode(num, nodesArr) {
     if (nodesArr && nodesArr.length) {
       for (let i = 0; i < nodesArr.length; i++) {
@@ -40,6 +37,12 @@ export default function RenderTree() {
         }
       }
       return false
+    }
+  }
+
+  // when node is placed on the same pos as other node, change it's parent and sibling node pos
+  function updateNodesPos(nodesArr, overlapNode, isLeft) {
+    if (isLeft) {
     }
   }
 
@@ -55,11 +58,12 @@ export default function RenderTree() {
     Rcount,
     nodesArr,
     LArr,
-    RArr
+    RArr,
+    isLeft
   ) {
     if (root == null) {
       let root = new CanvasNode(num, x, y, ctx)
-      // avoid putting node on the existing node:
+      // avoid putting node on same pos as the existing node:
       nodesArr.push(root)
       // check current node postion with existing node pos
       if (LArr && LArr.length) {
@@ -67,9 +71,19 @@ export default function RenderTree() {
         for (let i = 0; i < LArr.length; i++) {
           if (LArr[i] === Lcount && RArr[i] === Rcount) {
             console.log(`node ${JSON.stringify(root)} is on the other node`)
-            // excet root
+            // clear canvas
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-            nodesArr[i + 1].x = x - 50
+            // change the existing nodes pos on the same pos
+            // is newly insert left or right child?
+            // if (isLeft) {
+            //   nodesArr[i + 1].x = x - 40
+            //   nodesArr[nodesArr.length - 1].x = x + 40
+            // } else {
+            //   nodesArr[i + 1].x = x + 40
+            //   nodesArr[nodesArr.length - 1].x = x - 40
+            // }
+
+            // re-write whole tree with altered pos of node placed on same pos
             for (let j = 0; j < nodesArr.length; j++) {
               root = new CanvasNode(
                 nodesArr[j].num,
@@ -78,7 +92,6 @@ export default function RenderTree() {
                 ctx
               )
             }
-            // root = new CanvasNode(num, x, y, ctx)
           }
         }
       }
@@ -86,7 +99,7 @@ export default function RenderTree() {
       LArr.push(Lcount)
       RArr.push(Rcount)
 
-      // line
+      // draw line between nodes
       for (let k = 0; k < shaffledArr.length; k++) {
         // tempNode is node from pure data structure js
         let tempNode = generatedTree.search(shaffledArr[k])
@@ -97,6 +110,7 @@ export default function RenderTree() {
             if (tempL !== null) {
               let tempCanvasNode = getCanvasNodeFromNode(tempL.weight, nodesArr)
               if (tempCanvasNode) {
+                ctx.beginPath()
                 ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
                 ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
                 ctx.strokeStyle = 'blue'
@@ -106,16 +120,13 @@ export default function RenderTree() {
             if (tempR !== null) {
               let tempCanvasNode = getCanvasNodeFromNode(tempR.weight, nodesArr)
               if (tempCanvasNode) {
+                ctx.beginPath()
                 ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
                 ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
                 ctx.strokeStyle = 'blue'
                 ctx.stroke()
               }
             }
-
-            // ctx.lineTo(100, 100)
-            // ctx.strokeStyle = 'blue'
-            // ctx.stroke()
           }
         }
       }
@@ -124,6 +135,7 @@ export default function RenderTree() {
     }
     if (num < root.num) {
       Lcount++
+      isLeft = true
 
       // change pos
       x = x - 90
@@ -139,10 +151,13 @@ export default function RenderTree() {
         Rcount,
         nodesArr,
         LArr,
-        RArr
+        RArr,
+        isLeft
       )
     } else if (num > root.num) {
       Rcount++
+      isLeft = false
+
       // change pos
       x = x + 90
       y = y + 50
@@ -157,7 +172,8 @@ export default function RenderTree() {
         Rcount,
         nodesArr,
         LArr,
-        RArr
+        RArr,
+        isLeft
       )
     }
     return root
@@ -186,6 +202,7 @@ export default function RenderTree() {
           // RecPlaceCanvasNode(root, num, x, y, ctx)
           let enterRightCount = 0
           let enterLeftCount = 0
+          let isLeft = false
           RecPlaceCanvasNode(
             root,
             shaffledArr[i],
@@ -196,7 +213,8 @@ export default function RenderTree() {
             enterRightCount,
             canvasNodes,
             leftCountArray,
-            rightCountArray
+            rightCountArray,
+            isLeft
           )
         }
       }

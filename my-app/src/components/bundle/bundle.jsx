@@ -53,7 +53,7 @@ export default function Bundle({
             ></input>
           </li>
           <li>
-            <button onClick={handleInsert}>Inser Node</button>
+            <button onClick={handleInsert}>Insert Node</button>
           </li>
           <li>
             <label htmlFor='number-to-delete'>Number to delete</label>
