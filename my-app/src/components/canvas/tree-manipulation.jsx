@@ -18,18 +18,18 @@ export default function RenderTree() {
     // circle
     ctx.beginPath()
     ctx.arc(this.x, this.y, 20, 0, Math.PI * 2)
-    // ctx.fillStyle = 'blue'
-    // ctx.fill()
+    ctx.fillStyle = 'blue'
+    ctx.fill()
     ctx.strokeStyle = 'blue'
     ctx.stroke()
 
     // text
-    // ctx.fillStyle = 'white'
+    ctx.fillStyle = 'white'
     ctx.font = '18px Arial'
     ctx.fillText(this.num, this.x - 5, this.y - 2)
   }
 
-  // get canvas node from array based on the weight its passed
+  // get canvas node from canvas nodes array based on the weight its passed
   function getCanvasNodeFromNode(num, nodesArr) {
     if (nodesArr && nodesArr.length) {
       for (let i = 0; i < nodesArr.length; i++) {
@@ -110,6 +110,170 @@ export default function RenderTree() {
     }
 
     return result
+  }
+
+  // sort canvasNodes array based on each canvas height, if there is more than one canvasNode having same nodes
+  // sort that subtree based on each node's weight
+  function getSortedNodesArray(canvasNodes) {
+    // DEFORME TREE TO AVOID PLACING NODE AT SAME POS
+    let sortedHeightNodes = []
+    // copy canvas Nodes for craeting sorted node
+    for (let a = 0; a < canvasNodes.length; a++) {
+      sortedHeightNodes.push(canvasNodes[a])
+    }
+    // sort canvasNodes on height
+    sortedHeightNodes.sort((a, b) => a.height - b.height)
+    console.log('sortedHeightNode: ', sortedHeightNodes)
+
+    let sameHeightIndexIndicate = []
+    //get end position of same height element from start to end of sorted array
+    for (let b = 0; b < sortedHeightNodes.length - 1; b++) {
+      if (sortedHeightNodes[b].height !== sortedHeightNodes[b + 1].height) {
+        sameHeightIndexIndicate.push(b + 1)
+      }
+    }
+
+    // check if if there is more than one node that has same height
+    let sortNeedArr = []
+    for (let d = 0; d < sameHeightIndexIndicate.length - 1; d++) {
+      let temp1 = sameHeightIndexIndicate[d + 1]
+      let temp2 = sameHeightIndexIndicate[d]
+
+      if (temp1 - temp2 > 1) {
+        sortNeedArr.push(sameHeightIndexIndicate[d])
+        sortNeedArr.push(sameHeightIndexIndicate[d + 1])
+      }
+    }
+
+    // sort again based on num of element within the nodes having same height as other
+    for (let c = 0; c < sortNeedArr.length - 1; c += 2) {
+      let startPos = sortNeedArr[c]
+      let nextStartPos = sortNeedArr[c + 1]
+
+      // sort array based on their num(weight)
+      const temp = sortedHeightNodes
+        .slice(startPos, nextStartPos)
+        .sort((a, b) => a.num - b.num)
+      // replace array with sorted sub-array
+      sortedHeightNodes.splice(startPos, nextStartPos - startPos, ...temp)
+    }
+
+    console.log('sorted arr on num is:', sortedHeightNodes)
+    return sortedHeightNodes
+  }
+
+  // craete canvas nodes, fill empty canvas nodes, return it
+  function fillRecCanvasNodes(
+    root,
+    num,
+    x,
+    y,
+    ctx,
+    Lcount,
+    Rcount,
+    nodesArr,
+    isLeft,
+    parents
+  ) {
+    if (root == null) {
+      let height = Lcount + Rcount
+      let x = parents[parents.length - 1].x
+      let y = parents[parents.length - 1].y + 70
+
+      if (nodesArr && nodesArr.length) {
+        if (height === 1) {
+          isLeft ? (x -= 640) : (x += 640)
+        }
+        if (height === 2) {
+          isLeft ? (x -= 320) : (x += 320)
+        }
+        if (height === 3) {
+          isLeft ? (x -= 160) : (x += 160)
+        }
+        if (height === 4) {
+          isLeft ? (x -= 80) : (x += 80)
+        }
+        if (height === 5) {
+          isLeft ? (x -= 40) : (x += 40)
+        }
+        if (height === 6) {
+          isLeft ? (x -= 20) : (x += 20)
+        }
+        if (height === 7) {
+          isLeft ? (x -= 10) : (x += 10)
+        }
+      }
+      let root = new CanvasNode(num, x, y, ctx, height)
+      nodesArr.push(root)
+
+      // draw line between nodes
+      for (let k = 0; k < shaffledArr.length; k++) {
+        // tempNode is node from pure data structure js
+        let tempNode = generatedTree.search(shaffledArr[k])
+        for (let l = 0; l < nodesArr.length; l++) {
+          if (tempNode.weight === nodesArr[l].num) {
+            let tempL = tempNode.left
+            let tempR = tempNode.right
+            if (tempL !== null) {
+              let tempCanvasNode = getCanvasNodeFromNode(tempL.weight, nodesArr)
+              if (tempCanvasNode) {
+                ctx.beginPath()
+                ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
+                ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
+                ctx.strokeStyle = 'blue'
+                ctx.stroke()
+              }
+            }
+            if (tempR !== null) {
+              let tempCanvasNode = getCanvasNodeFromNode(tempR.weight, nodesArr)
+              if (tempCanvasNode) {
+                ctx.beginPath()
+                ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
+                ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
+                ctx.strokeStyle = 'blue'
+                ctx.stroke()
+              }
+            }
+          }
+        }
+      }
+      return root
+    }
+    if (num < root.num) {
+      isLeft = true
+      Lcount++
+      parents.push(root)
+      // change parent root to left
+      root.left = fillRecCanvasNodes(
+        root.left,
+        num,
+        x,
+        y,
+        ctx,
+        Lcount,
+        Rcount,
+        nodesArr,
+        isLeft,
+        parents
+      )
+    } else if (num > root.num) {
+      isLeft = false
+      Rcount++
+      parents.push(root)
+      root.right = fillRecCanvasNodes(
+        root.right,
+        num,
+        x,
+        y,
+        ctx,
+        Lcount,
+        Rcount,
+        nodesArr,
+        isLeft,
+        parents
+      )
+    }
+    return root
   }
 
   // the root should not be the canvas node
@@ -258,7 +422,8 @@ export default function RenderTree() {
           let enterRightCount = 0
           let enterLeftCount = 0
           let isLeft = false
-          RecPlaceCanvasNode(
+          //function fillRecCanvasNodes(root, num, x, y, ctx, Lcount, Rcount, nodesArr)
+          fillRecCanvasNodes(
             root,
             shaffledArr[i],
             root.x,
@@ -267,58 +432,34 @@ export default function RenderTree() {
             enterLeftCount,
             enterRightCount,
             canvasNodes,
-            leftCountArray,
-            rightCountArray,
             isLeft,
             parents
           )
+          // RecPlaceCanvasNode(
+          //   root,
+          //   shaffledArr[i],
+          //   root.x,
+          //   root.y,
+          //   c,
+          //   enterLeftCount,
+          //   enterRightCount,
+          //   canvasNodes,
+          //   leftCountArray,
+          //   rightCountArray,
+          //   isLeft,
+          //   parents
+          // )
         }
       }
 
-      // DEFORME TREE TO AVOID PLACING NODE AT SAME POS
-      let sortedHeightNodes = []
-      // copy canvas Nodes for craeting sorted node
-      for (let a = 0; a < canvasNodes.length; a++) {
-        sortedHeightNodes.push(canvasNodes[a])
-      }
-      // sort canvasNodes on height
-      sortedHeightNodes.sort((a, b) => a.height - b.height)
-      console.log('sortedHeightNode: ', sortedHeightNodes)
-
-      let sameHeightIndexIndicate = []
-      //get end position of same height element from start to end of sorted array
-      for (let b = 0; b < sortedHeightNodes.length - 1; b++) {
-        if (sortedHeightNodes[b].height !== sortedHeightNodes[b + 1].height) {
-          sameHeightIndexIndicate.push(b + 1)
-        }
-      }
-
-      // check if if there is more than one node that has same height
-      let sortNeedArr = []
-      for (let d = 0; d < sameHeightIndexIndicate.length - 1; d++) {
-        let temp1 = sameHeightIndexIndicate[d + 1]
-        let temp2 = sameHeightIndexIndicate[d]
-
-        if (temp1 - temp2 > 1) {
-          sortNeedArr.push(sameHeightIndexIndicate[d])
-          sortNeedArr.push(sameHeightIndexIndicate[d + 1])
-        }
-      }
-
-      // sort again based on num of element within the nodes having same height as other
-      for (let c = 0; c < sortNeedArr.length - 1; c += 2) {
-        let startPos = sortNeedArr[c]
-        let nextStartPos = sortNeedArr[c + 1]
-
-        // sort array based on their num(weight)
-        const temp = sortedHeightNodes
-          .slice(startPos, nextStartPos)
-          .sort((a, b) => a.num - b.num)
-        // replace array with sorted sub-array
-        sortedHeightNodes.splice(startPos, nextStartPos - startPos, ...temp)
-      }
-
-      console.log('sorted arr on num is:', sortedHeightNodes)
+      //sort filled out array depends on height, weight
+      let temp = getSortedNodesArray(canvasNodes)
+      console.log(' temp :', temp)
+      //sortedNodes, idx, ctx
+      //c.clearRect(0, 0, c.canvas.width, c.canvas.height)
+      // for (let j = 0; j < temp.length; j++) {
+      //   SortedArrayRecPlace(temp, j, c)
+      // }
 
       //let maxHeight = sortedHeightNodes[sortedHeightNodes.length - 1].height
       //console.log('MAX: ', maxHeight)

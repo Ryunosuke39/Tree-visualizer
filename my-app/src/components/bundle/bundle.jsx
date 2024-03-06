@@ -26,9 +26,8 @@ export default function Bundle({
               defaultValue='none'
             >
               <option value='none'>Select tree</option>
-              <option value='binary-search'>binary-search</option>
-              <option value='heap'>heap</option>
-              <option value='avl'>avl</option>
+              <option value='binary-search'>Binary-Search</option>
+              <option value='avl'>AVL</option>
             </select>
           </li>
           <li>
