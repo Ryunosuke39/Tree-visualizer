@@ -73,7 +73,6 @@ function placeNodeRec(rootNode, x, y, weight, tree, shaffledArr, ctx) {
     let value = tree.search(shaffledArr[0]).weight
     let left = tree.search(shaffledArr[0]).left
     let right = tree.search(shaffledArr[0]).right
-    let rootNode = new Node(x, y, 30, value, left, right)
     console.log('from placeNodeRec: root node is', rootNode)
     console.log(
       'from placeNodeRec: rootNode weight is ',

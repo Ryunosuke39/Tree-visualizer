@@ -9,10 +9,11 @@ export default function RenderTree() {
   const generatedTree = useContext(generatedTreeCtx)
 
   // node obj
-  function CanvasNode(num, x, y, ctx) {
+  function CanvasNode(num, x, y, ctx, height) {
     this.num = num
     this.x = x
     this.y = y
+    this.height = height
 
     // circle
     ctx.beginPath()
@@ -36,14 +37,79 @@ export default function RenderTree() {
           return nodesArr[i]
         }
       }
+      // console.log(`ERROR: canvas node with ${num} does not exist`)
       return false
     }
   }
 
-  // when node is placed on the same pos as other node, change it's parent and sibling node pos
-  function updateNodesPos(nodesArr, overlapNode, isLeft) {
-    if (isLeft) {
+  // get all children canvas node. root is canvas node
+  function getAllChildren(root, nodes) {
+    let result = []
+    console.log('getAllC root: ', root)
+    // recursively search node and add all
+    function getAllRecChildren(root) {
+      if (root === null) {
+        console.log('got all children')
+        return result
+      }
+      if (generatedTree.search(root.num).left) {
+        console.log('entered1')
+        let tempL = generatedTree.search(root.num).left
+        // converting pure node to canvas root node
+        let canvasLChild = getCanvasNodeFromNode(tempL, nodes)
+        console.log('canvasLChild: ', canvasLChild)
+        if (canvasLChild.num < root.num) {
+          result.push(canvasLChild)
+          getAllRecChildren(canvasLChild)
+        }
+      }
+      if (generatedTree.search(root.num).right) {
+        console.log('entered2')
+        let tempR = generatedTree.search(root.num).right
+        let canvasRChild = getCanvasNodeFromNode(tempR, nodes)
+        console.log('canvasRChild: ', canvasRChild)
+        if (canvasRChild.num > root.num) {
+          result.push(canvasRChild)
+          getAllRecChildren(canvasRChild)
+        }
+      }
+      // error handling return
+      return root
     }
+
+    // use inner recersive function
+    getAllRecChildren(root)
+    return result
+  }
+
+  // get right half of tree nodes
+  function getRightHalfNode(root, parents, nodes) {
+    let result = []
+    // if current node has chid, get all decendants, and add to results
+    if (
+      generatedTree.search(root.num).left ||
+      generatedTree.search(root.num).right
+    ) {
+      let children = getAllChildren(root, nodes)
+      for (let i = 0; i < children.length; i++) {
+        result.push(children[i])
+      }
+    }
+    // get all parents(conposing canvas nodes)
+    for (let i = 0; i < parents.length; i++) {
+      result.push(parents[i])
+      // if parent has right child, get and add it too
+      // !!!!  this will add already added node
+      //only add right child of the direct parent of root!
+      if (generatedTree.search(parents[i].num).right) {
+        let children = getAllChildren(parents[i], nodes)
+        for (let j = 0; j < children.length; j++) {
+          result.push(children[i])
+        }
+      }
+    }
+
+    return result
   }
 
   // the root should not be the canvas node
@@ -59,42 +125,25 @@ export default function RenderTree() {
     nodesArr,
     LArr,
     RArr,
-    isLeft
+    isLeft,
+    parents
   ) {
     if (root == null) {
-      let root = new CanvasNode(num, x, y, ctx)
+      let height = Lcount + Rcount
+
+      let root = new CanvasNode(num, x, y, ctx, height)
       // avoid putting node on same pos as the existing node:
       nodesArr.push(root)
-      // check current node postion with existing node pos
+
+      // is on the other node? when using Recursive placement
       if (LArr && LArr.length) {
-        //same as RArr
         for (let i = 0; i < LArr.length; i++) {
           if (LArr[i] === Lcount && RArr[i] === Rcount) {
             console.log(`node ${JSON.stringify(root)} is on the other node`)
-            // clear canvas
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-            // change the existing nodes pos on the same pos
-            // is newly insert left or right child?
-            // if (isLeft) {
-            //   nodesArr[i + 1].x = x - 40
-            //   nodesArr[nodesArr.length - 1].x = x + 40
-            // } else {
-            //   nodesArr[i + 1].x = x + 40
-            //   nodesArr[nodesArr.length - 1].x = x - 40
-            // }
-
-            // re-write whole tree with altered pos of node placed on same pos
-            for (let j = 0; j < nodesArr.length; j++) {
-              root = new CanvasNode(
-                nodesArr[j].num,
-                nodesArr[j].x,
-                nodesArr[j].y,
-                ctx
-              )
-            }
           }
         }
       }
+
       // push L, R count as existing node
       LArr.push(Lcount)
       RArr.push(Rcount)
@@ -136,9 +185,10 @@ export default function RenderTree() {
     if (num < root.num) {
       Lcount++
       isLeft = true
+      parents.push(root)
 
       // change pos
-      x = x - 90
+      x = x - 50
       y = y + 50
 
       root.left = RecPlaceCanvasNode(
@@ -152,14 +202,16 @@ export default function RenderTree() {
         nodesArr,
         LArr,
         RArr,
-        isLeft
+        isLeft,
+        parents
       )
     } else if (num > root.num) {
       Rcount++
       isLeft = false
+      parents.push(root)
 
       // change pos
-      x = x + 90
+      x = x + 50
       y = y + 50
 
       root.right = RecPlaceCanvasNode(
@@ -173,7 +225,8 @@ export default function RenderTree() {
         nodesArr,
         LArr,
         RArr,
-        isLeft
+        isLeft,
+        parents
       )
     }
     return root
@@ -193,9 +246,11 @@ export default function RenderTree() {
       let rightCountArray = []
 
       for (let i = 0; i < shaffledArr.length + 1; i++) {
+        // parents arr will have its decentants, arr will be reseted at each iteration
+        let parents = []
         // set root node
         if (i === 0) {
-          root = new CanvasNode(shaffledArr[i], c.canvas.width / 2, 100, c)
+          root = new CanvasNode(shaffledArr[i], c.canvas.width / 2, 100, c, 0)
           canvasNodes.push(root)
         } else {
           // call recursive function
@@ -214,13 +269,61 @@ export default function RenderTree() {
             canvasNodes,
             leftCountArray,
             rightCountArray,
-            isLeft
+            isLeft,
+            parents
           )
         }
       }
-      // test
-      console.log('Larr: ', leftCountArray)
-      console.log('Rare: ', rightCountArray)
+
+      // DEFORME TREE TO AVOID PLACING NODE AT SAME POS
+      let sortedHeightNodes = []
+      // copy canvas Nodes for craeting sorted node
+      for (let a = 0; a < canvasNodes.length; a++) {
+        sortedHeightNodes.push(canvasNodes[a])
+      }
+      // sort canvasNodes on height
+      sortedHeightNodes.sort((a, b) => a.height - b.height)
+      console.log('sortedHeightNode: ', sortedHeightNodes)
+
+      let sameHeightIndexIndicate = []
+      //get end position of same height element from start to end of sorted array
+      for (let b = 0; b < sortedHeightNodes.length - 1; b++) {
+        if (sortedHeightNodes[b].height !== sortedHeightNodes[b + 1].height) {
+          sameHeightIndexIndicate.push(b + 1)
+        }
+      }
+
+      // check if if there is more than one node that has same height
+      let sortNeedArr = []
+      for (let d = 0; d < sameHeightIndexIndicate.length - 1; d++) {
+        let temp1 = sameHeightIndexIndicate[d + 1]
+        let temp2 = sameHeightIndexIndicate[d]
+
+        if (temp1 - temp2 > 1) {
+          sortNeedArr.push(sameHeightIndexIndicate[d])
+          sortNeedArr.push(sameHeightIndexIndicate[d + 1])
+        }
+      }
+
+      // sort again based on num of element within the nodes having same height as other
+      for (let c = 0; c < sortNeedArr.length - 1; c += 2) {
+        let startPos = sortNeedArr[c]
+        let nextStartPos = sortNeedArr[c + 1]
+
+        // sort array based on their num(weight)
+        const temp = sortedHeightNodes
+          .slice(startPos, nextStartPos)
+          .sort((a, b) => a.num - b.num)
+        // replace array with sorted sub-array
+        sortedHeightNodes.splice(startPos, nextStartPos - startPos, ...temp)
+      }
+
+      console.log('sorted arr on num is:', sortedHeightNodes)
+
+      //let maxHeight = sortedHeightNodes[sortedHeightNodes.length - 1].height
+      //console.log('MAX: ', maxHeight)
+      // reposition nodes
+      // function CanvasNode(num, x, y, ctx, height)
     }
   }, [shaffledArr])
   return <canvas ref={canvasRef}></canvas>

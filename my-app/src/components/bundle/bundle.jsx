@@ -18,7 +18,7 @@ export default function Bundle({
       <div className='body'>
         <ul>
           <li>
-            <label htmlFor='algo'>Algorithm</label>
+            <label htmlFor='algo'>Data Structure</label>
             <select
               value={algotype}
               onChange={handleAlgoChange}
