@@ -58,14 +58,14 @@ export default function AssembleScreen() {
     if (numToInsert) {
       //when tree is not empty, add num to shaffledArr and regenerate tree with that array
       if (shaffledArr && shaffledArr.length) {
-        // copy shaffledArr
+        // copy shaffledArr and add a inserting node
         let tempArr = []
         for (let i = 0; i < shaffledArr.length; i++) {
           tempArr.push(shaffledArr[i])
         }
         tempArr.push(Number(numToInsert))
         setShaffledArr(tempArr)
-        console.log('array changed', tempArr)
+
         const tempTree = new BinarySearchTree()
         // create tree ds with given array
         const { tree, arr } = BstInsert(tempTree, tempArr)
@@ -75,9 +75,15 @@ export default function AssembleScreen() {
         console.log('arr is ', arr)
       } else {
         // when tree is empty
+        BstInsertedNodes.push(numToInsert)
+        setShaffledArr(BstInsertedNodes)
+        const tempTree = new BinarySearchTree()
+        const { tree, arr } = BstInsert(tempTree, BstInsertedNodes)
+        setGeneratedTree(tree)
+        setShaffledArr(arr)
       }
     } else {
-      console.log('value is empty')
+      console.log('insert value is empty')
     }
   }
   //  Deleting one node from tree
