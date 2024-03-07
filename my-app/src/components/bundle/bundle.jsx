@@ -9,6 +9,8 @@ export default function Bundle({
   handleSearch,
   algotype,
   handleAlgoChange,
+  numToInsert,
+  setNumToInsert,
 }) {
   return (
     <div className='bundle-container'>
@@ -34,6 +36,7 @@ export default function Bundle({
             <label htmlFor='number-of-elements'>Number of element</label>
             <input
               type='number'
+              name='numberOfElements'
               value={numOfNodes}
               id='number-of-elements'
               placeholder='number-of-elements'
@@ -41,18 +44,27 @@ export default function Bundle({
             ></input>
           </li>
           <li>
-            <button onClick={handleGenerateTree}>Generaet Tree</button>
+            <button name='generateButton' onClick={handleGenerateTree}>
+              Generaet Tree
+            </button>
           </li>
-          <li>
-            <label htmlFor='number-to-insert'>Number to insert</label>
+          <li name='InsertLi'>
+            <label name='numberToInsertLabel' htmlFor='number-to-insert'>
+              Number to insert
+            </label>
             <input
               type='number'
+              name='numberToInsert'
+              value={numToInsert}
               id='number-to-insert'
               placeholder='number to insert'
+              onChange={(e) => setNumToInsert(e.target.value)}
             ></input>
           </li>
-          <li>
-            <button onClick={handleInsert}>Insert Node</button>
+          <li name='InsertButtonLi'>
+            <button name='insertButton' onClick={handleInsert}>
+              Insert Node
+            </button>
           </li>
           <li>
             <label htmlFor='number-to-delete'>Number to delete</label>

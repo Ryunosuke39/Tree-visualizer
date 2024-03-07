@@ -2,11 +2,21 @@ import { useContext, useEffect, useRef, useState } from 'react'
 
 import { shaffledArrCtx } from '../assemble-screen'
 import { generatedTreeCtx } from '../assemble-screen'
+import { nodeToInsertCtx } from '../assemble-screen'
+
+// insert function
+export function InsertNum(num, shaffledArr) {
+  shaffledArr.push(num)
+  console.log(' now shaffled arr is ', shaffledArr)
+}
 
 export default function RenderTree() {
   const canvasRef = useRef(null)
+  // generate tree
   const shaffledArr = useContext(shaffledArrCtx)
   const generatedTree = useContext(generatedTreeCtx)
+  // Insert
+  const numToInsert = useContext(nodeToInsertCtx)
 
   // node obj
   function CanvasNode(num, x, y, ctx, height) {
@@ -24,6 +34,9 @@ export default function RenderTree() {
     ctx.stroke()
 
     // text
+    ctx.strokeStyle = 'blue'
+    ctx.lineWidth = 1
+    ctx.strokeText(this.num, this.x - 5, this.y - 2)
     ctx.fillStyle = 'white'
     ctx.font = '18px Arial'
     ctx.fillText(this.num, this.x - 5, this.y - 2)
@@ -177,32 +190,53 @@ export default function RenderTree() {
   ) {
     if (root == null) {
       let height = Lcount + Rcount
-      let x = parents[parents.length - 1].x
-      let y = parents[parents.length - 1].y + 70
+      let x = parents[parents.length - 1].x + 50
+      let y = parents[parents.length - 1].y + 100
+      //check how many node have same height
+      // let temp = []
+      // for (let a = 0; a < nodesArr.length; a++) {
+      //   temp.push(nodesArr[a])
+      // }
+      // temp.sort((a, b) => a.height - b.height)
 
+      // let MaxHeight = temp[temp.length - 1].height
+
+      // let MaxHeightNode = 0
+
+      // for (let b = 0; b < temp.length; b++) {
+      //   if (temp[b].height === MaxHeight) {
+      //     MaxHeightNode++
+      //   }
+      // }
+
+      // if (MaxHeightNode > 2) {
+      // }
+
+      // ORIGINAL
       if (nodesArr && nodesArr.length) {
         if (height === 1) {
-          isLeft ? (x -= 640) : (x += 640)
+          isLeft ? (x -= 1280) : (x += 1280)
         }
         if (height === 2) {
-          isLeft ? (x -= 320) : (x += 320)
+          isLeft ? (x -= 640) : (x += 640)
         }
         if (height === 3) {
-          isLeft ? (x -= 160) : (x += 160)
+          isLeft ? (x -= 320) : (x += 320)
         }
         if (height === 4) {
-          isLeft ? (x -= 80) : (x += 80)
+          isLeft ? (x -= 160) : (x += 160)
         }
         if (height === 5) {
-          isLeft ? (x -= 40) : (x += 40)
+          isLeft ? (x -= 80) : (x += 80)
         }
         if (height === 6) {
-          isLeft ? (x -= 20) : (x += 20)
+          isLeft ? (x -= 40) : (x += 40)
         }
         if (height === 7) {
-          isLeft ? (x -= 10) : (x += 10)
+          isLeft ? (x -= 20) : (x += 20)
         }
       }
+
       let root = new CanvasNode(num, x, y, ctx, height)
       nodesArr.push(root)
 
@@ -276,127 +310,18 @@ export default function RenderTree() {
     return root
   }
 
-  // the root should not be the canvas node
-  // need to get access to left, right
-  function RecPlaceCanvasNode(
-    root,
-    num,
-    x,
-    y,
-    ctx,
-    Lcount,
-    Rcount,
-    nodesArr,
-    LArr,
-    RArr,
-    isLeft,
-    parents
-  ) {
-    if (root == null) {
-      let height = Lcount + Rcount
-
-      let root = new CanvasNode(num, x, y, ctx, height)
-      // avoid putting node on same pos as the existing node:
-      nodesArr.push(root)
-
-      // is on the other node? when using Recursive placement
-      if (LArr && LArr.length) {
-        for (let i = 0; i < LArr.length; i++) {
-          if (LArr[i] === Lcount && RArr[i] === Rcount) {
-            console.log(`node ${JSON.stringify(root)} is on the other node`)
-          }
-        }
+  // is insert num already exist or not?
+  function checkNumExistOrNot(numToInsert, nodesArray) {
+    for (let i = 0; i < nodesArray.length; i++) {
+      if (numToInsert == nodesArray[i].num) {
+        return true
       }
-
-      // push L, R count as existing node
-      LArr.push(Lcount)
-      RArr.push(Rcount)
-
-      // draw line between nodes
-      for (let k = 0; k < shaffledArr.length; k++) {
-        // tempNode is node from pure data structure js
-        let tempNode = generatedTree.search(shaffledArr[k])
-        for (let l = 0; l < nodesArr.length; l++) {
-          if (tempNode.weight === nodesArr[l].num) {
-            let tempL = tempNode.left
-            let tempR = tempNode.right
-            if (tempL !== null) {
-              let tempCanvasNode = getCanvasNodeFromNode(tempL.weight, nodesArr)
-              if (tempCanvasNode) {
-                ctx.beginPath()
-                ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
-                ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
-                ctx.strokeStyle = 'blue'
-                ctx.stroke()
-              }
-            }
-            if (tempR !== null) {
-              let tempCanvasNode = getCanvasNodeFromNode(tempR.weight, nodesArr)
-              if (tempCanvasNode) {
-                ctx.beginPath()
-                ctx.moveTo(nodesArr[l].x, nodesArr[l].y)
-                ctx.lineTo(tempCanvasNode.x, tempCanvasNode.y)
-                ctx.strokeStyle = 'blue'
-                ctx.stroke()
-              }
-            }
-          }
-        }
-      }
-
-      return root
     }
-    if (num < root.num) {
-      Lcount++
-      isLeft = true
-      parents.push(root)
-
-      // change pos
-      x = x - 50
-      y = y + 50
-
-      root.left = RecPlaceCanvasNode(
-        root.left,
-        num,
-        x,
-        y,
-        ctx,
-        Lcount,
-        Rcount,
-        nodesArr,
-        LArr,
-        RArr,
-        isLeft,
-        parents
-      )
-    } else if (num > root.num) {
-      Rcount++
-      isLeft = false
-      parents.push(root)
-
-      // change pos
-      x = x + 50
-      y = y + 50
-
-      root.right = RecPlaceCanvasNode(
-        root.right,
-        num,
-        x,
-        y,
-        ctx,
-        Lcount,
-        Rcount,
-        nodesArr,
-        LArr,
-        RArr,
-        isLeft,
-        parents
-      )
-    }
-    return root
+    return false
   }
 
   useEffect(() => {
+    console.log('USE EFFECT CALLED')
     // canvas setup
     const canvas = canvasRef.current
     const c = canvas.getContext('2d')
@@ -404,10 +329,16 @@ export default function RenderTree() {
     c.canvas.height = window.innerHeight
 
     if (shaffledArr && shaffledArr.length) {
+      //if (shaffledArr.length > 10) {
+      c.canvas.width += 6000
+      c.canvas.height += 4000
+      //}
+    }
+
+    // GENERATE TREE
+    if (shaffledArr && shaffledArr.length) {
       let root = null
       let canvasNodes = []
-      let leftCountArray = []
-      let rightCountArray = []
 
       for (let i = 0; i < shaffledArr.length + 1; i++) {
         // parents arr will have its decentants, arr will be reseted at each iteration
@@ -435,36 +366,20 @@ export default function RenderTree() {
             isLeft,
             parents
           )
-          // RecPlaceCanvasNode(
-          //   root,
-          //   shaffledArr[i],
-          //   root.x,
-          //   root.y,
-          //   c,
-          //   enterLeftCount,
-          //   enterRightCount,
-          //   canvasNodes,
-          //   leftCountArray,
-          //   rightCountArray,
-          //   isLeft,
-          //   parents
-          // )
         }
       }
 
       //sort filled out array depends on height, weight
       let temp = getSortedNodesArray(canvasNodes)
       console.log(' temp :', temp)
-      //sortedNodes, idx, ctx
-      //c.clearRect(0, 0, c.canvas.width, c.canvas.height)
-      // for (let j = 0; j < temp.length; j++) {
-      //   SortedArrayRecPlace(temp, j, c)
-      // }
 
-      //let maxHeight = sortedHeightNodes[sortedHeightNodes.length - 1].height
-      //console.log('MAX: ', maxHeight)
-      // reposition nodes
-      // function CanvasNode(num, x, y, ctx, height)
+      // Insert a node
+      if (numToInsert) {
+        console.log(
+          `node${numToInsert} exist?`,
+          checkNumExistOrNot(numToInsert, canvasNodes)
+        )
+      }
     }
   }, [shaffledArr])
   return <canvas ref={canvasRef}></canvas>
