@@ -11,6 +11,10 @@ export default function Bundle({
   handleAlgoChange,
   numToInsert,
   setNumToInsert,
+  numToSearch,
+  setNumToSearch,
+  numToDelete,
+  setNumToDelete,
 }) {
   return (
     <div className='bundle-container'>
@@ -70,8 +74,10 @@ export default function Bundle({
             <label htmlFor='number-to-delete'>Number to delete</label>
             <input
               type='number'
+              value={numToDelete}
               id='number-to-delete'
               placeholder='number to delete'
+              onChange={(e) => setNumToDelete(e.target.value)}
             ></input>
           </li>
           <li>
@@ -81,8 +87,10 @@ export default function Bundle({
             <label htmlFor='number-to-search'>Number to search</label>
             <input
               type='number'
+              value={numToSearch}
               id='number-to-search'
               placeholder='number to search'
+              onChange={(e) => setNumToSearch(e.target.value)}
             ></input>
           </li>
           <li>

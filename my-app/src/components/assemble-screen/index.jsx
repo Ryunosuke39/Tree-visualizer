@@ -8,6 +8,7 @@ import BinarySearchTree from '../trees/algorithms/bst'
 import TreeManipulation from '../canvas/tree-manipulation'
 //Insert Node
 import BstInsert from '../trees/bst-operation/bst-insert'
+//search Node
 
 export const numNodeContext = createContext()
 export const generatedTreeCtx = createContext()
@@ -15,7 +16,8 @@ export const shaffledArrCtx = createContext()
 
 // insert
 export const nodeToInsertCtx = createContext()
-export const InsertedArrCtx = createContext()
+// delete
+export const nodeToDeleteCtx = createContext()
 
 export default function AssembleScreen() {
   // GENERATE TREE
@@ -26,10 +28,13 @@ export default function AssembleScreen() {
 
   // INSERT TREE
   const [numToInsert, setNumToInsert] = useState('')
-  const [InsertedArr, setInsertedArr] = useState([])
 
   // DELETE TREE
+  const [numToDelete, setNumToDelete] = useState('')
+
   // SEARCH TREE
+  const [numToSearch, setNumToSearch] = useState(0)
+  const [showSearchPopup, setShowSearchPopup] = useState(false)
 
   // handle algorithm slection function
   function handleAlgoChange(e) {
@@ -55,49 +60,81 @@ export default function AssembleScreen() {
   // Insert one node into existing tree( tree could be empty )
   let BstInsertedNodes = []
   function handleInsert() {
-    if (numToInsert) {
-      //when tree is not empty, add num to shaffledArr and regenerate tree with that array
-      if (shaffledArr && shaffledArr.length) {
-        // copy shaffledArr and add a inserting node
-        let tempArr = []
-        for (let i = 0; i < shaffledArr.length; i++) {
-          tempArr.push(shaffledArr[i])
-        }
-        tempArr.push(Number(numToInsert))
-        setShaffledArr(tempArr)
+    if (selectedAlgo === 'binary-search') {
+      if (numToInsert) {
+        //when tree is not empty, add num to shaffledArr and regenerate tree with that array
+        if (shaffledArr && shaffledArr.length) {
+          // copy shaffledArr and add a inserting node
+          let tempArr = []
+          for (let i = 0; i < shaffledArr.length; i++) {
+            tempArr.push(shaffledArr[i])
+          }
+          tempArr.push(Number(numToInsert))
+          setShaffledArr(tempArr)
 
-        const tempTree = new BinarySearchTree()
-        // create tree ds with given array
-        const { tree, arr } = BstInsert(tempTree, tempArr)
-        setGeneratedTree(tree)
-        setShaffledArr(arr)
-        console.log('tree is', tree)
-        console.log('arr is ', arr)
+          const tempTree = new BinarySearchTree()
+          // create tree ds with given array
+          const { tree, arr } = BstInsert(tempTree, tempArr)
+          setGeneratedTree(tree)
+          setShaffledArr(arr)
+          console.log('tree is', tree)
+          console.log('arr is ', arr)
+        } else {
+          // when tree is empty
+          BstInsertedNodes.push(numToInsert)
+          setShaffledArr(BstInsertedNodes)
+          const tempTree = new BinarySearchTree()
+          const { tree, arr } = BstInsert(tempTree, BstInsertedNodes)
+          setGeneratedTree(tree)
+          setShaffledArr(arr)
+        }
       } else {
-        // when tree is empty
-        BstInsertedNodes.push(numToInsert)
-        setShaffledArr(BstInsertedNodes)
-        const tempTree = new BinarySearchTree()
-        const { tree, arr } = BstInsert(tempTree, BstInsertedNodes)
-        setGeneratedTree(tree)
-        setShaffledArr(arr)
+        console.log('insert value is empty')
       }
-    } else {
-      console.log('insert value is empty')
     }
+    //avl
   }
   //  Deleting one node from tree
   function handleDelete() {
+    // deleting node from data structure
+    generatedTree.deleteNode(Number(numToDelete))
+    let tempArr = generatedTree.getAllNodesInOrder()
+    for (let i = 0; i < tempArr.length; i++) {
+      BstInsertedNodes.push(tempArr[i])
+    }
+    setShaffledArr(BstInsertedNodes)
+    const tempTree = new BinarySearchTree()
+    const { tree, arr } = BstInsert(tempTree, BstInsertedNodes)
+    setGeneratedTree(tree)
+    setShaffledArr(arr)
+
     console.log('handleDelete pressed')
   }
+
+  // search message popup
+  function handleToggleSearchPopup() {
+    setShowSearchPopup(!showSearchPopup)
+  }
+  function onClose() {
+    setShowSearchPopup(false)
+  }
+
   //  Search node with specified key value
   function handleSearch() {
+    if (numToSearch) {
+      let temp = generatedTree
+      let result = temp.search(Number(numToSearch))
+      console.log('search result: ', temp.search(Number(numToSearch)))
+      if (result) {
+        handleToggleSearchPopup()
+      }
+    }
     console.log('handleSearch pressed')
   }
 
   return (
     <>
-      <InsertedArrCtx.Provider value={InsertedArr}>
+      <nodeToDeleteCtx.Provider value={numToDelete}>
         <nodeToInsertCtx.Provider value={numToInsert}>
           <numNodeContext.Provider value={numOfNodes}>
             <generatedTreeCtx.Provider value={generatedTree}>
@@ -112,13 +149,17 @@ export default function AssembleScreen() {
                   handleAlgoChange={handleAlgoChange}
                   numToInsert={numToInsert}
                   setNumToInsert={setNumToInsert}
+                  numToSearch={numToSearch}
+                  setNumToSearch={setNumToSearch}
+                  numToDelete={numToDelete}
+                  setNumToDelete={setNumToDelete}
                 />
                 <Canvas />
               </shaffledArrCtx.Provider>
             </generatedTreeCtx.Provider>
           </numNodeContext.Provider>
         </nodeToInsertCtx.Provider>
-      </InsertedArrCtx.Provider>
+      </nodeToDeleteCtx.Provider>
     </>
   )
 }
