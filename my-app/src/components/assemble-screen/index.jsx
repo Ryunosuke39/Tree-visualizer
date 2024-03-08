@@ -94,20 +94,22 @@ export default function AssembleScreen() {
     }
     //avl
   }
+
   //  Deleting one node from tree
   function handleDelete() {
     // deleting node from data structure
     generatedTree.deleteNode(Number(numToDelete))
-    let tempArr = generatedTree.getAllNodesInOrder()
-    for (let i = 0; i < tempArr.length; i++) {
-      BstInsertedNodes.push(tempArr[i])
-    }
-    setShaffledArr(BstInsertedNodes)
+    // retreive tree node after deletion
+    let leafs = generatedTree.getAllLeafNode()
+    let nodes = generatedTree.getNodeForRegenerate(leafs)
+
+    // receate tree with new update
     const tempTree = new BinarySearchTree()
-    const { tree, arr } = BstInsert(tempTree, BstInsertedNodes)
+    const { tree, arr } = BstInsert(tempTree, nodes)
     setGeneratedTree(tree)
     setShaffledArr(arr)
-
+    console.log('leaf nodes: ', leafs)
+    console.log('regen node: ', nodes)
     console.log('handleDelete pressed')
   }
 

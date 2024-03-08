@@ -103,6 +103,80 @@ class BinarySearchTree {
     }
     return arr
   }
+
+  // get al leaf node
+  // get all path from root to that leaf node, remove duplication
+  // combine all array from right part of tree to left part of tree
+  // regeneraet tree with that array after deletion
+  getAllLeafNode = () => {
+    let allLeaf = []
+    return this.getAllLeafNodeRec(this.root, allLeaf)
+  }
+
+  getAllLeafNodeRec = (root, arr) => {
+    if (root == null) {
+      return arr // Base case
+    }
+    this.getAllLeafNodeRec(root.left, arr)
+    if (root.left == null && root.right == null) {
+      arr.push(root.weight)
+    }
+    this.getAllLeafNodeRec(root.right, arr)
+
+    return arr
+  }
+
+  getParent = (num) => {
+    let tempArr = []
+    this.getParentRec(this.root, num, tempArr)
+    return tempArr
+  }
+
+  getParentRec = (root, weight, parents) => {
+    if (root == null) {
+      return root
+    } else {
+      if (weight < root.weight) {
+        parents.push(root.weight)
+        this.getParentRec(root.left, weight, parents)
+      }
+      parents.push(root.weight)
+      this.getParentRec(root.right, weight, parents)
+    }
+    return root
+  }
+
+  // does this element eixst in array?
+  checkDuplicateNum = (arr, num) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === num) {
+        return true
+      }
+    }
+    return false
+  }
+
+  //for each leaf node get all parent, arr is leaf nodes
+  getNodeForRegenerate = (arr) => {
+    let results = []
+    for (let i = 0; i < arr.length; i++) {
+      let parents = this.getParent(arr[i])
+      for (let j = 0; j < parents.length; j++) {
+        //when result have some leef's parent
+        if (results && results.length) {
+          //check if inserting node exist or not
+          let isExist = this.checkDuplicateNum(results, parents[j])
+          if (isExist == false) {
+            results.push(parents[j])
+          }
+        } else {
+          //when results empty
+          results.push(parents[j])
+        }
+      }
+    }
+    return results
+  }
 }
 
 export default BinarySearchTree
