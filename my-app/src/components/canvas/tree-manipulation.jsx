@@ -4,6 +4,8 @@ import { shaffledArrCtx } from '../assemble-screen'
 import { generatedTreeCtx } from '../assemble-screen'
 import { nodeToInsertCtx } from '../assemble-screen'
 
+import './canvas-style.css'
+
 // insert function
 export function InsertNum(num, shaffledArr) {
   shaffledArr.push(num)
@@ -27,7 +29,7 @@ export default function RenderTree() {
 
     // circle
     ctx.beginPath()
-    ctx.arc(this.x, this.y, 20, 0, Math.PI * 2)
+    ctx.arc(this.x, this.y, 30, 0, Math.PI * 2)
     ctx.fillStyle = 'blue'
     ctx.fill()
     ctx.strokeStyle = 'blue'
@@ -38,7 +40,7 @@ export default function RenderTree() {
     ctx.lineWidth = 1
     ctx.strokeText(this.num, this.x - 5, this.y - 2)
     ctx.fillStyle = 'white'
-    ctx.font = '18px Arial'
+    ctx.font = '28px Arial'
     ctx.fillText(this.num, this.x - 5, this.y - 2)
   }
 
@@ -191,7 +193,7 @@ export default function RenderTree() {
     if (root == null) {
       let height = Lcount + Rcount
       let x = parents[parents.length - 1].x + 50
-      let y = parents[parents.length - 1].y + 100
+      let y = parents[parents.length - 1].y + 200
       //check how many node have same height
       // let temp = []
       // for (let a = 0; a < nodesArr.length; a++) {
@@ -215,25 +217,25 @@ export default function RenderTree() {
       // ORIGINAL
       if (nodesArr && nodesArr.length) {
         if (height === 1) {
-          isLeft ? (x -= 1280) : (x += 1280)
-        }
-        if (height === 2) {
           isLeft ? (x -= 640) : (x += 640)
         }
-        if (height === 3) {
+        if (height === 2) {
           isLeft ? (x -= 320) : (x += 320)
         }
-        if (height === 4) {
+        if (height === 3) {
           isLeft ? (x -= 160) : (x += 160)
         }
-        if (height === 5) {
+        if (height === 4) {
           isLeft ? (x -= 80) : (x += 80)
         }
-        if (height === 6) {
+        if (height === 5) {
           isLeft ? (x -= 40) : (x += 40)
         }
-        if (height === 7) {
+        if (height === 6) {
           isLeft ? (x -= 20) : (x += 20)
+        }
+        if (height === 7) {
+          isLeft ? (x -= 10) : (x += 10)
         }
       }
 
@@ -325,15 +327,8 @@ export default function RenderTree() {
     // canvas setup
     const canvas = canvasRef.current
     const c = canvas.getContext('2d')
-    c.canvas.width = window.innerWidth
-    c.canvas.height = window.innerHeight
-
-    if (shaffledArr && shaffledArr.length) {
-      //if (shaffledArr.length > 10) {
-      c.canvas.width += 6000
-      c.canvas.height += 4000
-      //}
-    }
+    c.canvas.width = window.innerWidth + 1200
+    c.canvas.height = window.innerHeight + 1200
 
     // GENERATE TREE
     if (shaffledArr && shaffledArr.length) {

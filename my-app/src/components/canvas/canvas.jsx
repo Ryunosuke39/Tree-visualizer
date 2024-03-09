@@ -1,4 +1,3 @@
-import './canvas-style.css'
 import Animation from './animation'
 import TreeManipulation from './tree-manipulation'
 

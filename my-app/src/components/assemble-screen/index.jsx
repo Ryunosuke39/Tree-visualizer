@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-
+import './style.css'
 import Bundle from '../bundle/bundle'
 import Canvas from '../canvas/canvas'
 import GenerateTree from '../trees/generate-tree/generate-tree'
@@ -21,7 +21,7 @@ export const nodeToDeleteCtx = createContext()
 
 export default function AssembleScreen() {
   // GENERATE TREE
-  const [numOfNodes, setNumOfNodes] = useState('3')
+  const [numOfNodes, setNumOfNodes] = useState('10')
   const [selectedAlgo, setSelectedAlgo] = useState()
   const [generatedTree, setGeneratedTree] = useState(null)
   const [shaffledArr, setShaffledArr] = useState([])
@@ -135,7 +135,7 @@ export default function AssembleScreen() {
   }
 
   return (
-    <>
+    <div className='container'>
       <nodeToDeleteCtx.Provider value={numToDelete}>
         <nodeToInsertCtx.Provider value={numToInsert}>
           <numNodeContext.Provider value={numOfNodes}>
@@ -156,12 +156,14 @@ export default function AssembleScreen() {
                   numToDelete={numToDelete}
                   setNumToDelete={setNumToDelete}
                 />
-                <Canvas />
+                <div className='canvas-container'>
+                  <Canvas />
+                </div>
               </shaffledArrCtx.Provider>
             </generatedTreeCtx.Provider>
           </numNodeContext.Provider>
         </nodeToInsertCtx.Provider>
       </nodeToDeleteCtx.Provider>
-    </>
+    </div>
   )
 }
