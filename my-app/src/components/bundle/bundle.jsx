@@ -1,4 +1,6 @@
 import './bundle-style.css'
+import { searchNodeCtx } from '../assemble-screen'
+import { useContext } from 'react'
 
 export default function Bundle({
   numOfNodes,
@@ -16,6 +18,7 @@ export default function Bundle({
   numToDelete,
   setNumToDelete,
 }) {
+  const searchResult = useContext(searchNodeCtx)
   return (
     <div className='bundle-container'>
       <div className='header'>
@@ -103,6 +106,11 @@ export default function Bundle({
             </li>
             <li>
               <button onClick={handleSearch}>Search Node</button>
+            </li>
+          </div>
+          <div>
+            <li>
+              <div>{searchResult}</div>
             </li>
           </div>
         </ul>

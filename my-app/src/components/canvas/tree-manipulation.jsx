@@ -194,25 +194,6 @@ export default function RenderTree() {
       let height = Lcount + Rcount
       let x = parents[parents.length - 1].x + 50
       let y = parents[parents.length - 1].y + 200
-      //check how many node have same height
-      // let temp = []
-      // for (let a = 0; a < nodesArr.length; a++) {
-      //   temp.push(nodesArr[a])
-      // }
-      // temp.sort((a, b) => a.height - b.height)
-
-      // let MaxHeight = temp[temp.length - 1].height
-
-      // let MaxHeightNode = 0
-
-      // for (let b = 0; b < temp.length; b++) {
-      //   if (temp[b].height === MaxHeight) {
-      //     MaxHeightNode++
-      //   }
-      // }
-
-      // if (MaxHeightNode > 2) {
-      // }
 
       // ORIGINAL
       if (nodesArr && nodesArr.length) {

@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react'
 import './style.css'
+
 import Bundle from '../bundle/bundle'
 import Canvas from '../canvas/canvas'
 import GenerateTree from '../trees/generate-tree/generate-tree'
@@ -18,6 +19,8 @@ export const shaffledArrCtx = createContext()
 export const nodeToInsertCtx = createContext()
 // delete
 export const nodeToDeleteCtx = createContext()
+//search
+export const searchNodeCtx = createContext()
 
 export default function AssembleScreen() {
   // GENERATE TREE
@@ -35,6 +38,7 @@ export default function AssembleScreen() {
   // SEARCH TREE
   const [numToSearch, setNumToSearch] = useState(0)
   const [showSearchPopup, setShowSearchPopup] = useState(false)
+  const [searchResult, setSearchResult] = useState('')
 
   // handle algorithm slection function
   function handleAlgoChange(e) {
@@ -50,8 +54,6 @@ export default function AssembleScreen() {
       const { tree, arr } = GenerateTree(tempTree, numOfNodes)
       setGeneratedTree(tree)
       setShaffledArr(arr)
-      console.log('tree is', tree)
-      console.log('arr is ', arr)
     }
     if (selectedAlgo === 'avl') {
     }
@@ -77,8 +79,6 @@ export default function AssembleScreen() {
           const { tree, arr } = BstInsert(tempTree, tempArr)
           setGeneratedTree(tree)
           setShaffledArr(arr)
-          console.log('tree is', tree)
-          console.log('arr is ', arr)
         } else {
           // when tree is empty
           BstInsertedNodes.push(numToInsert)
@@ -108,9 +108,6 @@ export default function AssembleScreen() {
     const { tree, arr } = BstInsert(tempTree, nodes)
     setGeneratedTree(tree)
     setShaffledArr(arr)
-    console.log('leaf nodes: ', leafs)
-    console.log('regen node: ', nodes)
-    console.log('handleDelete pressed')
   }
 
   // search message popup
@@ -126,9 +123,12 @@ export default function AssembleScreen() {
     if (numToSearch) {
       let temp = generatedTree
       let result = temp.search(Number(numToSearch))
-      console.log('search result: ', temp.search(Number(numToSearch)))
+
       if (result) {
-        handleToggleSearchPopup()
+        console.log('search pop up enter')
+        setSearchResult(`node ${numToSearch} found`)
+      } else {
+        setSearchResult(`node ${numToSearch} node found`)
       }
     }
     console.log('handleSearch pressed')
@@ -136,34 +136,36 @@ export default function AssembleScreen() {
 
   return (
     <div className='container'>
-      <nodeToDeleteCtx.Provider value={numToDelete}>
-        <nodeToInsertCtx.Provider value={numToInsert}>
-          <numNodeContext.Provider value={numOfNodes}>
-            <generatedTreeCtx.Provider value={generatedTree}>
-              <shaffledArrCtx.Provider value={shaffledArr}>
-                <Bundle
-                  numOfNodes={numOfNodes}
-                  setNumOfNodes={setNumOfNodes}
-                  handleGenerateTree={handleGenerateTree}
-                  handleInsert={handleInsert}
-                  handleDelete={handleDelete}
-                  handleSearch={handleSearch}
-                  handleAlgoChange={handleAlgoChange}
-                  numToInsert={numToInsert}
-                  setNumToInsert={setNumToInsert}
-                  numToSearch={numToSearch}
-                  setNumToSearch={setNumToSearch}
-                  numToDelete={numToDelete}
-                  setNumToDelete={setNumToDelete}
-                />
-                <div className='canvas-container'>
-                  <Canvas />
-                </div>
-              </shaffledArrCtx.Provider>
-            </generatedTreeCtx.Provider>
-          </numNodeContext.Provider>
-        </nodeToInsertCtx.Provider>
-      </nodeToDeleteCtx.Provider>
+      <searchNodeCtx.Provider value={searchResult}>
+        <nodeToDeleteCtx.Provider value={numToDelete}>
+          <nodeToInsertCtx.Provider value={numToInsert}>
+            <numNodeContext.Provider value={numOfNodes}>
+              <generatedTreeCtx.Provider value={generatedTree}>
+                <shaffledArrCtx.Provider value={shaffledArr}>
+                  <Bundle
+                    numOfNodes={numOfNodes}
+                    setNumOfNodes={setNumOfNodes}
+                    handleGenerateTree={handleGenerateTree}
+                    handleInsert={handleInsert}
+                    handleDelete={handleDelete}
+                    handleSearch={handleSearch}
+                    handleAlgoChange={handleAlgoChange}
+                    numToInsert={numToInsert}
+                    setNumToInsert={setNumToInsert}
+                    numToSearch={numToSearch}
+                    setNumToSearch={setNumToSearch}
+                    numToDelete={numToDelete}
+                    setNumToDelete={setNumToDelete}
+                  />
+                  <div className='canvas-container'>
+                    <Canvas />
+                  </div>
+                </shaffledArrCtx.Provider>
+              </generatedTreeCtx.Provider>
+            </numNodeContext.Provider>
+          </nodeToInsertCtx.Provider>
+        </nodeToDeleteCtx.Provider>
+      </searchNodeCtx.Provider>
     </div>
   )
 }
