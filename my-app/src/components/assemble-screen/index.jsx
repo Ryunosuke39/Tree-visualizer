@@ -128,7 +128,7 @@ export default function AssembleScreen() {
         console.log('search pop up enter')
         setSearchResult(`node ${numToSearch} found`)
       } else {
-        setSearchResult(`node ${numToSearch} node found`)
+        setSearchResult(`node ${numToSearch} not found`)
       }
     }
     console.log('handleSearch pressed')
