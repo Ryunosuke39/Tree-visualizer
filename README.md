@@ -1,7 +1,7 @@
 # Tree Visualizer 
 
- Technologies: React, HTML, CSS - 
- Check my work: https://binary-tree-visualization.web.app _
+ Technologies: React, HTML, CSS\
+ Check my work: https://binary-tree-visualization.web.app\
 
 ## 1. What is this project?
    - This project allow you to visualize variable Binary Search Tree Data Structure on Web-Page.
