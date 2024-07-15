@@ -7,23 +7,30 @@
 .container {
   display: grid;
   grid-template-rows: 1fr 10fr;
+  height: 100vh;
+  position: relative;
 }
 
 .bundle {
-  width: 100%;
-  background: rgb(247, 247, 247);
+  width: 100vw;
+  min-height: 12rem;
+  background: rgb(147, 108, 255);
   position: fixed;
 }
 
 .canvas-container {
-  width: 1000%;
-  height: 1000%;
+  /* center div */
+  max-width: fit-content;
+  max-height: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center-canvas {
+  /* max-width: 10000vw; */
+  max-height: 100vh;
   margin-top: 12rem;
   z-index: -1;
   background: rgb(255, 255, 255);
 
-  /* center div */
-  max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
 }

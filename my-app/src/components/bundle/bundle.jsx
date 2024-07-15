@@ -2,6 +2,8 @@ import './bundle-style.css'
 import { searchNodeCtx } from '../assemble-screen'
 import { useContext } from 'react'
 
+import { shaffledArrCtx } from '../assemble-screen'
+
 export default function Bundle({
   numOfNodes,
   setNumOfNodes,
@@ -18,8 +20,12 @@ export default function Bundle({
   numToDelete,
   setNumToDelete,
 }) {
-  const searchResult = useContext(searchNodeCtx)
+  // for generate 
+  const shaffledArr = useContext(shaffledArrCtx)
+
+
   // for search res coloring 
+  const searchResult = useContext(searchNodeCtx)
   let doExistCSS = searchResult[1]? 'found' : 'not-found'
 
   return (
@@ -58,6 +64,7 @@ export default function Bundle({
                   <button name='generateButton' onClick={handleGenerateTree}>
                     GENERATE
                   </button>
+                  <div className='shaffle-order'>{`Insert Order: ${shaffledArr}`}</div>
             </div>
 
             <div className='operation'>

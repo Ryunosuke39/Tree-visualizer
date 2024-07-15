@@ -22,6 +22,11 @@ label {
   padding-right: 1.2rem;
 }
 
+.shaffle-order {
+  margin-left: 1.2rem;
+  background: white;
+}
+
 .search-res {
   margin-left: 1.2rem;
 }

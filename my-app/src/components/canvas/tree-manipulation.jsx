@@ -4,7 +4,7 @@ import { shaffledArrCtx } from '../assemble-screen'
 import { generatedTreeCtx } from '../assemble-screen'
 import { nodeToInsertCtx } from '../assemble-screen'
 
-import './canvas-style.css'
+// import './canvas-style.css'
 
 // insert function
 export function InsertNum(num, shaffledArr) {
@@ -29,8 +29,8 @@ export default function RenderTree() {
 
     // circle
     ctx.beginPath()
-    ctx.arc(this.x, this.y, 30, 0, Math.PI * 2)
-    ctx.fillStyle = 'blue'
+    ctx.arc(this.x, this.y, 15, 0, Math.PI * 2)
+    ctx.fillStyle = 'lightblue'
     ctx.fill()
     ctx.strokeStyle = 'blue'
     ctx.stroke()
@@ -38,10 +38,10 @@ export default function RenderTree() {
     // text
     ctx.strokeStyle = 'blue'
     ctx.lineWidth = 1
-    ctx.strokeText(this.num, this.x - 5, this.y - 2)
-    ctx.fillStyle = 'white'
-    ctx.font = '28px Arial'
-    ctx.fillText(this.num, this.x - 5, this.y - 2)
+    // ctx.strokeText(this.num, this.x - 5, this.y - 2)
+    ctx.fillStyle = 'blue'
+    ctx.font = '18px Arial'
+    ctx.fillText(this.num, this.x - 5, this.y - 15)
   }
 
   // get canvas node from canvas nodes array based on the weight its passed
@@ -192,16 +192,16 @@ export default function RenderTree() {
   ) {
     if (root == null) {
       let height = Lcount + Rcount
-      let x = parents[parents.length - 1].x + 50
-      let y = parents[parents.length - 1].y + 200
+      let x = parents[parents.length - 1].x;
+      let y = parents[parents.length - 1].y + 100
 
       // ORIGINAL
       if (nodesArr && nodesArr.length) {
         if (height === 1) {
-          isLeft ? (x -= 640) : (x += 640)
+          isLeft ? (x -= 320) : (x += 320)
         }
         if (height === 2) {
-          isLeft ? (x -= 320) : (x += 320)
+          isLeft ? (x -= 160) : (x += 160)
         }
         if (height === 3) {
           isLeft ? (x -= 160) : (x += 160)

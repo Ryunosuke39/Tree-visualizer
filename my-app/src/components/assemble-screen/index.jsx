@@ -2,7 +2,6 @@ import { createContext, useState } from 'react'
 import './style.css'
 
 import Bundle from '../bundle/bundle'
-import Canvas from '../canvas/canvas'
 import GenerateTree from '../trees/generate-tree/generate-tree'
 import BinarySearchTree from '../trees/algorithms/bst'
 //BST
@@ -155,7 +154,10 @@ export default function AssembleScreen() {
                   />
                   </div>
                   <div className='canvas-container'>
-                    <Canvas />
+                    <div className='center-canvas'>
+                    {/* <Canvas /> */}
+                    <TreeManipulation />
+                    </div>
                   </div>
                 </shaffledArrCtx.Provider>
               </generatedTreeCtx.Provider>
