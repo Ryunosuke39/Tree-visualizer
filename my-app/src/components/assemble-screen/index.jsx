@@ -38,7 +38,7 @@ export default function AssembleScreen() {
   // SEARCH TREE
   const [numToSearch, setNumToSearch] = useState(0)
   const [showSearchPopup, setShowSearchPopup] = useState(false)
-  const [searchResult, setSearchResult] = useState('')
+  const [searchResult, setSearchResult] = useState([])
 
   // handle algorithm slection function
   function handleAlgoChange(e) {
@@ -123,13 +123,8 @@ export default function AssembleScreen() {
     if (numToSearch) {
       let temp = generatedTree
       let result = temp.search(Number(numToSearch))
-
-      if (result) {
-        console.log('search pop up enter')
-        setSearchResult(`node ${numToSearch} found`)
-      } else {
-        setSearchResult(`node ${numToSearch} not found`)
-      }
+      let doesExist = result ? true : false
+      setSearchResult([numToSearch, doesExist])
     }
     console.log('handleSearch pressed')
   }
@@ -142,6 +137,7 @@ export default function AssembleScreen() {
             <numNodeContext.Provider value={numOfNodes}>
               <generatedTreeCtx.Provider value={generatedTree}>
                 <shaffledArrCtx.Provider value={shaffledArr}>
+                  <div className='bundle'>
                   <Bundle
                     numOfNodes={numOfNodes}
                     setNumOfNodes={setNumOfNodes}
@@ -157,6 +153,7 @@ export default function AssembleScreen() {
                     numToDelete={numToDelete}
                     setNumToDelete={setNumToDelete}
                   />
+                  </div>
                   <div className='canvas-container'>
                     <Canvas />
                   </div>

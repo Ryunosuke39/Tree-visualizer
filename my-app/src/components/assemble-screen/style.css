@@ -3,3 +3,27 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.container {
+  display: grid;
+  grid-template-rows: 1fr 10fr;
+}
+
+.bundle {
+  width: 100%;
+  background: rgb(247, 247, 247);
+  position: fixed;
+}
+
+.canvas-container {
+  width: 1000%;
+  height: 1000%;
+  margin-top: 12rem;
+  z-index: -1;
+  background: rgb(255, 255, 255);
+
+  /* center div */
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
