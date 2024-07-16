@@ -20,10 +20,6 @@ export default function Bundle({
   numToDelete,
   setNumToDelete,
 }) {
-  // for generate 
-  const shaffledArr = useContext(shaffledArrCtx)
-
-
   // for search res coloring 
   const searchResult = useContext(searchNodeCtx)
   let doExistCSS = searchResult[1]? 'found' : 'not-found'
@@ -47,7 +43,6 @@ export default function Bundle({
                 >
                   <option value='none'>Select tree</option>
                   <option value='binary-search'>Binary-Search</option>
-                  <option value='avl'>AVL-InProgress...</option>
                 </select>
             </div>
 
@@ -64,7 +59,7 @@ export default function Bundle({
                   <button name='generateButton' onClick={handleGenerateTree}>
                     GENERATE
                   </button>
-                  {/* <div className='shaffle-order'>{`Insert Order: ${shaffledArr}`}</div> */}
+                
             </div>
 
             <div className='operation'>
@@ -82,6 +77,7 @@ export default function Bundle({
                   <button name='insertButton' onClick={handleInsert}>
                     INSERT
                   </button>
+                  <div className='search-res'>No duplicates allowed</div>
             </div>
 
             <div className='operation'>

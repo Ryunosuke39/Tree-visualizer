@@ -358,5 +358,5 @@ export default function RenderTree() {
       }
     }
   }, [shaffledArr])
-  return <canvas ref={canvasRef}></canvas>
+  return <div className='tree-container'><canvas ref={canvasRef}></canvas></div>
 }

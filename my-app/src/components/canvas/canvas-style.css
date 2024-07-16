@@ -8,11 +8,7 @@
 }
 
 canvas {
-  /* display: block; */
-  /* background: red; */
-  /* height: 80vh; */
   width: 100vw;
   height: 100vh;
   object-fit: contain;
-  overflow-y: scroll;
 }

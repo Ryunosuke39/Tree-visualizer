@@ -22,13 +22,7 @@
 }
 
 .center-canvas {
-  /* padding-left: 20%; */
-  /* max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  background: blue; */
-  overflow-y: scroll;
-  overflow-x: scroll;
+
 }
 
 .insert-log {
