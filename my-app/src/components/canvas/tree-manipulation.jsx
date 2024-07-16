@@ -4,7 +4,7 @@ import { shaffledArrCtx } from '../assemble-screen'
 import { generatedTreeCtx } from '../assemble-screen'
 import { nodeToInsertCtx } from '../assemble-screen'
 
-// import './canvas-style.css'
+import './canvas-style.css'
 
 // insert function
 export function InsertNum(num, shaffledArr) {
@@ -29,10 +29,10 @@ export default function RenderTree() {
 
     // circle
     ctx.beginPath()
-    ctx.arc(this.x, this.y, 15, 0, Math.PI * 2)
+    ctx.arc(this.x, this.y, 20, 0, Math.PI * 2)
     ctx.fillStyle = 'lightblue'
     ctx.fill()
-    ctx.strokeStyle = 'blue'
+    ctx.strokeStyle = 'black'
     ctx.stroke()
 
     // text
@@ -41,7 +41,7 @@ export default function RenderTree() {
     // ctx.strokeText(this.num, this.x - 5, this.y - 2)
     ctx.fillStyle = 'blue'
     ctx.font = '18px Arial'
-    ctx.fillText(this.num, this.x - 5, this.y - 15)
+    ctx.fillText(this.num, this.x - 5, this.y-25)
   }
 
   // get canvas node from canvas nodes array based on the weight its passed
@@ -198,19 +198,19 @@ export default function RenderTree() {
       // ORIGINAL
       if (nodesArr && nodesArr.length) {
         if (height === 1) {
-          isLeft ? (x -= 320) : (x += 320)
-        }
-        if (height === 2) {
-          isLeft ? (x -= 160) : (x += 160)
-        }
-        if (height === 3) {
-          isLeft ? (x -= 160) : (x += 160)
-        }
-        if (height === 4) {
           isLeft ? (x -= 80) : (x += 80)
         }
-        if (height === 5) {
+        if (height === 2) {
+          isLeft ? (x -= 70) : (x += 70)
+        }
+        if (height === 3) {
+          isLeft ? (x -= 50) : (x += 50)
+        }
+        if (height === 4) {
           isLeft ? (x -= 40) : (x += 40)
+        }
+        if (height === 5) {
+          isLeft ? (x -= 30) : (x += 30)
         }
         if (height === 6) {
           isLeft ? (x -= 20) : (x += 20)
@@ -308,8 +308,8 @@ export default function RenderTree() {
     // canvas setup
     const canvas = canvasRef.current
     const c = canvas.getContext('2d')
-    c.canvas.width = window.innerWidth + 1200
-    c.canvas.height = window.innerHeight + 1200
+    c.canvas.width = window.innerWidth;
+    c.canvas.height = window.innerHeight;
 
     // GENERATE TREE
     if (shaffledArr && shaffledArr.length) {

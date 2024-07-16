@@ -1,17 +1,18 @@
 /* .tree-screen-container {
   border: 5px solid red;
 } */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 canvas {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto;
-  margin-right: auto;
   /* display: block; */
-  width: 100vh;
-  max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  background: red;
-  /* height: 100vh; */
+  /* background: red; */
+  /* height: 80vh; */
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  overflow-y: scroll;
 }

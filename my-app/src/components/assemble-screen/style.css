@@ -13,33 +13,22 @@
 
 .bundle {
   width: 100vw;
-  /* min-height: 12rem; */
   background: rgb(147, 108, 255);
   position: fixed;
 }
 
 .canvas-container {
-  /* center div */
-  /* max-height: fit-content;  */
-  max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 12rem;
+  margin-top: 11rem;
 }
 
 .center-canvas {
-  min-width: 10000vw;
-  /* max-height: 100vh; */
-  z-index: -1;
-  background: rgb(255, 255, 255);
-
-  /* max-height: fit-content;  */
-  max-width: fit-content;
+  /* padding-left: 20%; */
+  /* max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
-
-  margin-top: 10rem;
-
+  background: blue; */
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .insert-log {
@@ -61,10 +50,6 @@
   width: 20rem;
   height: 34rem;
   overflow-y: scroll;
-
-  /* max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto; */
 }
 
 .insert-log-contents-elm {

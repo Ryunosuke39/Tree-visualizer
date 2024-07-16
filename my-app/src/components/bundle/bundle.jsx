@@ -107,8 +107,6 @@ export default function Bundle({
                     ></input>
                     <button onClick={handleSearch}>SEARCH</button>
                     <span className={`search-res ${doExistCSS}`}>
-                      {/* {console.log(`searchResult: ${searchResult}`)} */}
-                      { }
                       <div className='search-res-cont'>{ searchResult[1] ? `Found ${searchResult[0]}`: `Not Found ${searchResult[0]}`}</div>
                     </span>
             </div>

@@ -163,8 +163,7 @@ export default function AssembleScreen() {
                       </div>
                     </div>
                     <div className='center-canvas'>
-                    {/* <Canvas /> */}
-                    <TreeManipulation />
+                      <TreeManipulation />
                     </div>
                   </div>
                 </shaffledArrCtx.Provider>

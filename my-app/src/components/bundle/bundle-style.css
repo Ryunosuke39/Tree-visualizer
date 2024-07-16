@@ -30,11 +30,11 @@ label {
 }
 
 .found {
-  background: green;
+  background: rgb(106, 255, 106);
 }
 
 .not-found {
-  background: red;
+  background: rgb(255, 65, 65);
 }
 
 .search-res-cont {
