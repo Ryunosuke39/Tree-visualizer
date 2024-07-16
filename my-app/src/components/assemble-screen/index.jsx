@@ -154,6 +154,14 @@ export default function AssembleScreen() {
                   />
                   </div>
                   <div className='canvas-container'>
+                    <div className='insert-log'>
+                    <div className='insert-order-title'>Insert Order Log</div>
+                      <div className='insert-log-contents'>
+                        {
+                          shaffledArr.map((e, i) => <div className='insert-log-contents-elm' key={i}>{`Node ${e} Inserted`}</div>)
+                        }
+                      </div>
+                    </div>
                     <div className='center-canvas'>
                     {/* <Canvas /> */}
                     <TreeManipulation />

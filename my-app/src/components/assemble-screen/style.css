@@ -24,12 +24,12 @@
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 12rem;
 }
 
 .center-canvas {
   min-width: 10000vw;
   /* max-height: 100vh; */
-  margin-top: 12rem;
   z-index: -1;
   background: rgb(255, 255, 255);
 
@@ -38,4 +38,41 @@
   margin-left: auto;
   margin-right: auto;
 
+  margin-top: 10rem;
+
+}
+
+.insert-log {
+  background: rgb(147, 108, 255);
+  border-radius: 10px;
+  position: fixed;
+  margin: 1.2rem;
+  max-width: 20rem;
+  height: 40rem;
+}
+
+.insert-order-title {
+  padding: 2rem;
+  background: rgb(162, 130, 248);
+  border-radius: 10px;
+}
+
+.insert-log-contents {
+  width: 20rem;
+  height: 34rem;
+  overflow-y: scroll;
+
+  /* max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto; */
+}
+
+.insert-log-contents-elm {
+  border-radius: 10px;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto; 
+  background: white;
+  margin-top: 0.5rem;
+  padding: 1rem
 }

@@ -64,7 +64,7 @@ export default function Bundle({
                   <button name='generateButton' onClick={handleGenerateTree}>
                     GENERATE
                   </button>
-                  <div className='shaffle-order'>{`Insert Order: ${shaffledArr}`}</div>
+                  {/* <div className='shaffle-order'>{`Insert Order: ${shaffledArr}`}</div> */}
             </div>
 
             <div className='operation'>
